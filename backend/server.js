@@ -20,10 +20,7 @@ app.use(express.json());
 
 // ─── Database Connection (with auto-retry) ───────────────────────────────────
 const connectWithRetry = () => {
-  mongoose.connect(MONGODB_URI, {
-    serverSelectionTimeoutMS: 10000,
-    family: 4, // Force IPv4 — Atlas M0 free tier does not support IPv6
-  })
+  mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 10000 })
     .then(() => console.log('✅ Connected to MongoDB'))
     .catch((err) => {
       console.error('❌ MongoDB connection error:', err.message);
@@ -105,12 +102,12 @@ app.post('/api/products', authMiddleware, async (req, res) => {
       ...req.body,
     });
     await product.save();
-    
+
     // Return without mongoose internal fields
     const productResponse = product.toObject();
     delete productResponse._id;
     delete productResponse.__v;
-    
+
     res.status(201).json({ success: true, data: productResponse });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
@@ -183,11 +180,11 @@ app.post('/api/testimonials', authMiddleware, async (req, res) => {
       ...req.body,
     });
     await testimonial.save();
-    
+
     const responseData = testimonial.toObject();
     delete responseData._id;
     delete responseData.__v;
-    
+
     res.status(201).json({ success: true, data: responseData });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
@@ -249,11 +246,11 @@ app.post('/api/contacts', async (req, res) => {
       ...req.body,
     });
     await contact.save();
-    
+
     const responseData = contact.toObject();
     delete responseData._id;
     delete responseData.__v;
-    
+
     res.status(201).json({ success: true, data: responseData });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
@@ -314,11 +311,11 @@ app.get('/api/stats', authMiddleware, async (req, res) => {
 // ─── Health Check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
   const dbState = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
-  res.json({ 
-    success: true, 
-    message: 'Pharmacy API running', 
+  res.json({
+    success: true,
+    message: 'Pharmacy API running',
     database: dbState,
-    timestamp: new Date().toISOString() 
+    timestamp: new Date().toISOString()
   });
 });
 
