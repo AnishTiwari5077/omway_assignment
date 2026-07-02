@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme.dart';
 
+import '../../../core/constants.dart';
+
 class FooterWidget extends StatelessWidget {
-  const FooterWidget({super.key});
+  final void Function(String) onNavigate;
+
+  const FooterWidget({super.key, required this.onNavigate});
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +164,7 @@ class FooterWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildLinks(String title, List<String> links) {
+  Widget _buildLinks(String title, List<Map<String, String>> links) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -174,11 +178,18 @@ class FooterWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         ...links.map(
-          (link) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Text(
-              link,
-              style: GoogleFonts.inter(fontSize: 13, color: Colors.white54),
+          (link) => InkWell(
+            onTap: () {
+              if (link['path'] != null) {
+                onNavigate(link['path']!);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12, top: 4, right: 20),
+              child: Text(
+                link['label']!,
+                style: GoogleFonts.inter(fontSize: 13, color: Colors.white54),
+              ),
             ),
           ),
         ),
@@ -243,21 +254,21 @@ class FooterWidget extends StatelessWidget {
     );
   }
 
-  static const _quickLinks = [
-    'Home',
-    'About Us',
-    'Products',
-    'Testimonials',
-    'Contact',
-    'Admin Panel',
+  static const List<Map<String, String>> _quickLinks = [
+    {'label': 'Home', 'path': '/'},
+    {'label': 'About Us', 'path': AppConstants.aboutSection},
+    {'label': 'Products', 'path': AppConstants.productsSection},
+    {'label': 'Testimonials', 'path': AppConstants.testimonialsSection},
+    {'label': 'Contact', 'path': AppConstants.contactSection},
+    {'label': 'Admin Panel', 'path': '/admin'},
   ];
 
-  static const _categories = [
-    'Pain Relief',
-    'Vitamins',
-    'Supplements',
-    'First Aid',
-    'Cough & Cold',
-    'Skin Care',
+  static const List<Map<String, String>> _categories = [
+    {'label': 'Pain Relief', 'path': AppConstants.productsSection},
+    {'label': 'Vitamins', 'path': AppConstants.productsSection},
+    {'label': 'Supplements', 'path': AppConstants.productsSection},
+    {'label': 'First Aid', 'path': AppConstants.productsSection},
+    {'label': 'Cough & Cold', 'path': AppConstants.productsSection},
+    {'label': 'Skin Care', 'path': AppConstants.productsSection},
   ];
 }

@@ -354,29 +354,40 @@ class _StatCard extends StatelessWidget {
               ),
             ],
           ),
-          const Spacer(),
-          Text(
-            data.value,
-            style: GoogleFonts.inter(
-              fontSize: 32,
-              fontWeight: FontWeight.w800,
-              color: data.color,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            data.label,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: AppTheme.textPrimary,
-            ),
-          ),
-          Text(
-            data.subLabel,
-            style: GoogleFonts.inter(
-              fontSize: 11,
-              color: AppTheme.textMuted,
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data.value,
+                    style: GoogleFonts.inter(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w800,
+                      color: data.color,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    data.label,
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    data.subLabel,
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: AppTheme.textMuted,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

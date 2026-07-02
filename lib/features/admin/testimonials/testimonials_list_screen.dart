@@ -64,7 +64,7 @@ class _TestimonialsListScreenState extends State<TestimonialsListScreen> {
                     return GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: crossCount,
-                        childAspectRatio: 2.2,
+                        childAspectRatio: crossCount == 1 ? (constraints.maxWidth > 400 ? 2.2 : 1.5) : (constraints.maxWidth > 1000 ? 2.2 : 1.6),
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
                       ),
@@ -188,96 +188,109 @@ class _TestimonialAdminCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppTheme.divider),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor: AppTheme.accentLight,
-                backgroundImage:
-                    testimonial.avatarUrl != null &&
-                            testimonial.avatarUrl!.isNotEmpty
-                        ? NetworkImage(testimonial.avatarUrl!)
-                        : null,
-                child: (testimonial.avatarUrl == null ||
-                        testimonial.avatarUrl!.isEmpty)
-                    ? Text(
-                        testimonial.authorName[0],
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.primary,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.topLeft,
+            child: ConstrainedBox(
+              constraints: constraints, // Pass the GridView cell's constraints
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 22,
+                        backgroundColor: AppTheme.accentLight,
+                        backgroundImage:
+                            testimonial.avatarUrl != null &&
+                                    testimonial.avatarUrl!.isNotEmpty
+                                ? NetworkImage(testimonial.avatarUrl!)
+                                : null,
+                        child: (testimonial.avatarUrl == null ||
+                                testimonial.avatarUrl!.isEmpty)
+                            ? Text(
+                                testimonial.authorName[0],
+                                style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w700,
+                                  color: AppTheme.primary,
+                                ),
+                              )
+                            : null,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              testimonial.authorName,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                            Text(
+                              testimonial.role,
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                color: AppTheme.textMuted,
+                              ),
+                            ),
+                          ],
                         ),
-                      )
-                    : null,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      testimonial.authorName,
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.textPrimary,
                       ),
-                    ),
-                    Text(
-                      testimonial.role,
+                      // Rating
+                      RatingBarIndicator(
+                        rating: testimonial.rating.toDouble(),
+                        itemBuilder: (_, __) => const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        itemCount: 5,
+                        itemSize: 14,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: Text(
+                      testimonial.content,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.inter(
-                        fontSize: 12,
+                        fontSize: 13,
                         color: AppTheme.textSecondary,
+                        fontStyle: FontStyle.italic,
+                        height: 1.5,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.end,
+                    spacing: 8,
+                    children: [
+                      TextButton.icon(
+                        onPressed: onEdit,
+                        icon: const Icon(Icons.edit_outlined, size: 16),
+                        label: const Text('Edit'),
+                        style: TextButton.styleFrom(foregroundColor: AppTheme.info),
+                      ),
+                      TextButton.icon(
+                        onPressed: onDelete,
+                        icon: const Icon(Icons.delete_outline, size: 16),
+                        label: const Text('Delete'),
+                        style: TextButton.styleFrom(foregroundColor: AppTheme.error),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              RatingBarIndicator(
-                rating: testimonial.rating,
-                itemBuilder: (_, __) => const Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ),
-                itemCount: 5,
-                itemSize: 14,
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            testimonial.content,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              color: AppTheme.textSecondary,
-              fontStyle: FontStyle.italic,
-              height: 1.5,
             ),
-          ),
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton.icon(
-                onPressed: onEdit,
-                icon: const Icon(Icons.edit_outlined, size: 16),
-                label: const Text('Edit'),
-                style: TextButton.styleFrom(foregroundColor: AppTheme.info),
-              ),
-              const SizedBox(width: 8),
-              TextButton.icon(
-                onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline, size: 16),
-                label: const Text('Delete'),
-                style: TextButton.styleFrom(foregroundColor: AppTheme.error),
-              ),
-            ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }

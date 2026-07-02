@@ -115,76 +115,88 @@ class _ProductCardState extends State<ProductCard> {
               ),
 
               // ── Product Details ────────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.product.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.textPrimary,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: ConstrainedBox(
+                      // Keep width constrained so text wraps instead of scaling down immediately
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width > 600 ? 250 : 180,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.product.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            widget.product.description,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              color: AppTheme.textSecondary,
+                              height: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '₹${widget.product.price.toStringAsFixed(0)}',
+                                style: GoogleFonts.inter(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppTheme.primary,
+                                ),
+                              ),
+                              _buildAddButton(),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: widget.product.stock > 0
+                                      ? AppTheme.success
+                                      : AppTheme.error,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                widget.product.stock > 0
+                                    ? 'In Stock (${widget.product.stock})'
+                                    : 'Out of Stock',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  color: widget.product.stock > 0
+                                      ? AppTheme.success
+                                      : AppTheme.error,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      widget.product.description,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: AppTheme.textSecondary,
-                        height: 1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '₹${widget.product.price.toStringAsFixed(0)}',
-                          style: GoogleFonts.inter(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: AppTheme.primary,
-                          ),
-                        ),
-                        _buildAddButton(),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: widget.product.stock > 0
-                                ? AppTheme.success
-                                : AppTheme.error,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          widget.product.stock > 0
-                              ? 'In Stock (${widget.product.stock})'
-                              : 'Out of Stock',
-                          style: GoogleFonts.inter(
-                            fontSize: 11,
-                            color: widget.product.stock > 0
-                                ? AppTheme.success
-                                : AppTheme.error,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],

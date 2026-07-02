@@ -47,27 +47,29 @@ class _FeaturedProductsSectionState extends State<FeaturedProductsSection> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SectionLabel(label: 'Featured Products')
-                          .animate()
-                          .fadeIn(delay: 100.ms)
-                          .slideX(begin: -0.2),
-                      const SizedBox(height: 12),
-                      Text(
-                        'Our Best Sellers',
-                        style: Theme.of(context).textTheme.displaySmall,
-                      )
-                          .animate()
-                          .fadeIn(delay: 200.ms)
-                          .slideX(begin: -0.2),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Hand-picked top quality products loved by our customers',
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ).animate().fadeIn(delay: 300.ms),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SectionLabel(label: 'Featured Products')
+                            .animate()
+                            .fadeIn(delay: 100.ms)
+                            .slideX(begin: -0.2),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Our Best Sellers',
+                          style: Theme.of(context).textTheme.displaySmall,
+                        )
+                            .animate()
+                            .fadeIn(delay: 200.ms)
+                            .slideX(begin: -0.2),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Hand-picked top quality products loved by our customers',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ).animate().fadeIn(delay: 300.ms),
+                      ],
+                    ),
                   ),
                 ],
               ).animate().fadeIn(delay: 100.ms),

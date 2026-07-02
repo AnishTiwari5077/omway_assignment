@@ -84,28 +84,35 @@ class _HeaderWidgetState extends State<HeaderWidget> {
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          padding: EdgeInsets.symmetric(horizontal: isWide ? 32 : 16, vertical: 16),
           child: Row(
             children: [
               // ── Logo ──────────────────────────────────────────────────────
-              _buildLogo(),
-              const Spacer(),
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: _buildLogo(),
+                ),
+              ),
+              const SizedBox(width: 8),
 
               // ── Nav Items (desktop) ───────────────────────────────────────
-              if (isWide)
+              if (isWide) ...[
                 Row(
                   children: _navItems
                       .map((item) => _buildNavItem(item))
                       .toList(),
                 ),
-              if (isWide) const SizedBox(width: 24),
+                const SizedBox(width: 24),
+              ],
 
               // ── Admin CTA ─────────────────────────────────────────────────
-              _buildAdminButton(context),
+              _buildAdminButton(context, isWide),
 
               // ── Mobile Menu ───────────────────────────────────────────────
               if (!isWide) ...[
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 _buildMobileMenu(context),
               ],
             ],
@@ -184,15 +191,18 @@ class _HeaderWidgetState extends State<HeaderWidget> {
     );
   }
 
-  Widget _buildAdminButton(BuildContext context) {
+  Widget _buildAdminButton(BuildContext context, bool isWide) {
     return ElevatedButton.icon(
       onPressed: () => Navigator.of(context).pushNamed('/admin'),
       icon: const Icon(Icons.admin_panel_settings_outlined, size: 16),
-      label: const Text('Admin'),
+      label: isWide ? const Text('Admin') : const SizedBox.shrink(),
       style: ElevatedButton.styleFrom(
         backgroundColor: _isScrolled ? AppTheme.primary : Colors.white,
         foregroundColor: _isScrolled ? Colors.white : AppTheme.primary,
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+        padding: EdgeInsets.symmetric(
+          horizontal: isWide ? 18 : 12,
+          vertical: 12,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         textStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
       ),

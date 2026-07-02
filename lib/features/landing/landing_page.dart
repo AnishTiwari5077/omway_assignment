@@ -74,7 +74,21 @@ class _LandingPageState extends State<LandingPage> {
                 ContactSection(
                   sectionKey: _sectionKeys[AppConstants.contactSection]!,
                 ),
-                const FooterWidget(),
+                FooterWidget(
+                  onNavigate: (path) {
+                    if (path == '/admin') {
+                      Navigator.of(context).pushNamed('/admin');
+                    } else if (_sectionKeys.containsKey(path)) {
+                      _scrollToSection(path);
+                    } else if (path == '/') {
+                      _scrollController.animateTo(
+                        0,
+                        duration: const Duration(milliseconds: 700),
+                        curve: Curves.easeInOutCubic,
+                      );
+                    }
+                  },
+                ),
               ],
             ),
           ),

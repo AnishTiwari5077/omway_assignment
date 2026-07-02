@@ -87,21 +87,36 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
                     child: SingleChildScrollView(
                       child: products.isEmpty
                           ? _buildEmpty()
-                          : Column(
-                              children: [
-                                _buildTableHeader(),
-                                ...products
-                                    .asMap()
-                                    .entries
-                                    .map(
-                                      (e) => _buildRow(
-                                        context,
-                                        e.value,
-                                        provider,
-                                        e.key,
-                                      ),
+                          : LayoutBuilder(
+                              builder: (context, constraints) {
+                                return SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      minWidth: 800,
+                                      maxWidth: constraints.maxWidth > 800
+                                          ? constraints.maxWidth
+                                          : 800,
                                     ),
-                              ],
+                                    child: Column(
+                                      children: [
+                                        _buildTableHeader(),
+                                        ...products
+                                            .asMap()
+                                            .entries
+                                            .map(
+                                              (e) => _buildRow(
+                                                context,
+                                                e.value,
+                                                provider,
+                                                e.key,
+                                              ),
+                                            ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                     ),
                   ),

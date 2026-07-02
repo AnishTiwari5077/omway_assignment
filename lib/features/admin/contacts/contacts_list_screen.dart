@@ -249,12 +249,15 @@ class _ContactCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          message.name,
-                          style: GoogleFonts.inter(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: AppTheme.textPrimary,
+                        Expanded(
+                          child: Text(
+                            message.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: AppTheme.textPrimary,
+                            ),
                           ),
                         ),
                         if (isUnread) ...[

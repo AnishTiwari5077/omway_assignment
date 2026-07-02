@@ -140,28 +140,24 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: testimonials
-                .asMap()
-                .entries
-                .map(
-                  (e) => Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        left: e.key == 0 ? 0 : 12,
-                        right: e.key == testimonials.length - 1 ? 0 : 12,
-                      ),
-                      child: _TestimonialCard(testimonial: e.value)
-                          .animate()
-                          .fadeIn(delay: (200 + e.key * 150).ms, duration: 600.ms)
-                          .slideY(begin: 0.2, end: 0),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
+        child: Wrap(
+          spacing: 24,
+          runSpacing: 24,
+          alignment: WrapAlignment.center,
+          children: testimonials
+              .asMap()
+              .entries
+              .map(
+                (e) => SizedBox(
+                  width: 270,
+                  height: 380,
+                  child: _TestimonialCard(testimonial: e.value)
+                      .animate()
+                      .fadeIn(delay: (200 + e.key * 150).ms, duration: 600.ms)
+                      .slideY(begin: 0.2, end: 0),
+                ),
+              )
+              .toList(),
         ),
       ),
     );
@@ -249,13 +245,17 @@ class _TestimonialCard extends StatelessWidget {
           const SizedBox(height: 14),
 
           // Content
-          Text(
-            testimonial.content,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
-              height: 1.65,
-              fontStyle: FontStyle.italic,
+          Expanded(
+            child: Text(
+              testimonial.content,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 15,
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: Colors.white.withOpacity(0.9),
+                height: 1.65,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
 
