@@ -1,0 +1,110 @@
+{
+  "products": [
+    {
+      "id": "p001",
+      "name": "Paracetamol 500mg",
+      "description": "Fast-acting pain relief and fever reducer. Suitable for adults and children over 12 years. 10 tablets per strip.",
+      "price": 25,
+      "category": "Pain Relief",
+      "imageUrl": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80",
+      "isFeatured": false,
+      "stock": 500,
+      "createdAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "p002",
+      "name": "OmegaShield Fish Oil",
+      "description": "High-potency Omega-3 fish oil capsules with EPA and DHA. Supports heart health, brain function, and joint mobility. 90 softgel capsules.",
+      "price": 450,
+      "category": "Supplements",
+      "imageUrl": "https://images.unsplash.com/photo-1550572017-4fcdbb59cc32?w=400&q=80",
+      "isFeatured": true,
+      "stock": 200,
+      "createdAt": "2024-01-02T00:00:00Z"
+    },
+    {
+      "id": "p003",
+      "name": "VitaBoost Multivitamin",
+      "description": "Complete daily multivitamin with 23 essential vitamins and minerals. Boosts immunity, energy levels, and overall wellness. 60 tablets per pack.",
+      "price": 380,
+      "category": "Vitamins",
+      "imageUrl": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&q=80",
+      "isFeatured": true,
+      "stock": 150,
+      "createdAt": "2024-01-03T00:00:00Z"
+    },
+    {
+      "id": "p004",
+      "name": "BandAid Premium Kit",
+      "description": "Complete first aid kit with assorted bandages, antiseptic wipes, sterile gauze pads, and medical tape. Waterproof and skin-safe adhesives.",
+      "price": 180,
+      "category": "First Aid",
+      "imageUrl": "https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=400&q=80",
+      "isFeatured": true,
+      "stock": 80,
+      "createdAt": "2024-01-04T00:00:00Z"
+    },
+    {
+      "id": "p005",
+      "name": "Cough Syrup Plus",
+      "description": "Effective relief from dry and wet cough with soothing herbal extracts. Non-drowsy formula suitable for daytime use. 100ml bottle.",
+      "price": 120,
+      "category": "Cough & Cold",
+      "imageUrl": "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&q=80",
+      "isFeatured": false,
+      "stock": 300,
+      "createdAt": "2024-01-05T00:00:00Z"
+    },
+    {
+      "id": "a00525b1-e883-4b7d-ba70-27697ca15d7d",
+      "createdAt": "2026-07-02T09:37:14.183Z",
+      "name": "newtablet",
+      "description": "[{\"insert\":\"mynew\",\"attributes\":{\"bold\":true}},{\"insert\":\"\\n\\n\"}]",
+      "price": 50,
+      "category": "Pain Relief",
+      "imageUrl": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&q=80",
+      "isFeatured": true,
+      "stock": 50
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "t001",
+      "authorName": "Sarah Mitchell",
+      "role": "Regular Customer",
+      "content": "MediCare Pharmacy has been my go-to for all health needs. Their products are always genuine, delivery is super fast, and the staff is incredibly knowledgeable. Highly recommend!",
+      "rating": 5,
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+      "createdAt": "2024-02-01T00:00:00Z"
+    },
+    {
+      "id": "t003",
+      "authorName": "Priya Sharma",
+      "role": "Wellness Enthusiast",
+      "content": "I've been ordering supplements from MediCare for 2 years now. The VitaBoost multivitamins and OmegaShield fish oil have genuinely improved my energy levels. Best pharmacy app!",
+      "rating": 5,
+      "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80",
+      "createdAt": "2024-02-10T00:00:00Z"
+    },
+    {
+      "id": "693fade3-0107-4f89-923f-fc10a6775d38",
+      "createdAt": "2026-07-02T07:21:13.497Z",
+      "authorName": "Anish Tiwari",
+      "role": "Full stack Software Engineer",
+      "content": "looking good ffffffffffffffffffffffffff",
+      "rating": 4,
+      "avatarUrl": ""
+    }
+  ],
+  "contacts": [
+    {
+      "id": "4644d1ce-4892-4c39-b147-1399c4d451a2",
+      "createdAt": "2026-07-02T06:54:31.714Z",
+      "isRead": true,
+      "name": "aaa",
+      "email": "example@gmail.com",
+      "phone": "1111111111",
+      "message": "hii how are you"
+    }
+  ]
+}
