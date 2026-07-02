@@ -1,6 +1,9 @@
 class AppConstants {
   // ─── API Base URL ─────────────────────────────────────────────────────────────
-  static const String baseUrl = 'http://localhost:3000/api';
+  // 🌐 Production (Render deployment)
+  static const String baseUrl = 'https://medicare-pharmacy-api.onrender.com/api';
+  // 🏠 Local development (uncomment when running locally)
+  // static const String baseUrl = 'http://localhost:3000/api';
 
   // ─── API Endpoints ────────────────────────────────────────────────────────────
   static const String productsEndpoint = '/products';
