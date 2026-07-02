@@ -1,8 +1,4 @@
 require('dotenv').config();
-// Override system DNS to use Google's public DNS (bypasses ISP DNS blocks)
-const dns = require('dns');
-dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
-
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
