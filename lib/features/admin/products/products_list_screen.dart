@@ -61,7 +61,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
           // ── Table ────────────────────────────────────────────────────────
           Expanded(
             child: Consumer<ProductProvider>(
-              builder: (_, provider, __) {
+              builder: (_, provider, _) {
                 if (provider.isLoading) {
                   return const Center(
                     child: CircularProgressIndicator(color: AppTheme.primary),
@@ -188,7 +188,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
               child: Image.network(
                 product.imageUrl,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   color: AppTheme.accentLight,
                   child: const Icon(
                     Icons.medication_outlined,
@@ -320,7 +320,7 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
         builder: (_) => ProductFormScreen(existingProduct: product),
       ),
     );
-    if (result == true && mounted) {
+    if (result == true && context.mounted) {
       context.read<ProductProvider>().loadProducts();
     }
   }
@@ -356,9 +356,9 @@ class _ProductsListScreenState extends State<ProductsListScreen> {
       ),
     );
 
-    if (confirmed == true && mounted) {
+    if (confirmed == true && context.mounted) {
       await provider.deleteProduct(product.id);
-      if (mounted) {
+      if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${product.name} deleted'),

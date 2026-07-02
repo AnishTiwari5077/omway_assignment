@@ -143,8 +143,7 @@ class _ContactSectionState extends State<ContactSection> {
           _buildContactItem(Icons.access_time_outlined, 'Hours',
               'Mon–Sat: 8am–10pm\nSun: 10am–6pm'),
         ]
-            .map((w) => Padding(padding: const EdgeInsets.only(bottom: 16), child: w))
-            .toList(),
+            .map((w) => Padding(padding: const EdgeInsets.only(bottom: 16), child: w)),
       ],
     );
   }
@@ -337,7 +336,7 @@ class _ContactSectionState extends State<ContactSection> {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: AppTheme.success.withOpacity(0.12),
+              color: AppTheme.success.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: const Icon(

@@ -81,7 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   'Manage your pharmacy products, testimonials, and customer messages from here.',
                   style: GoogleFonts.inter(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha:0.8),
                     height: 1.5,
                   ),
                 ),
@@ -93,7 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha:0.15),
               borderRadius: BorderRadius.circular(18),
             ),
             child: const Icon(
@@ -129,7 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
 
         return Consumer3<ProductProvider, TestimonialProvider, ContactProvider>(
-          builder: (_, products, testimonials, contacts, __) {
+          builder: (_, products, testimonials, contacts, _) {
             final cards = [
               _StatData(
                 label: 'Total Products',
@@ -183,7 +183,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildRecentContacts() {
     return Consumer<ContactProvider>(
-      builder: (_, provider, __) {
+      builder: (_, provider, _) {
         final recent = provider.contacts.take(5).toList();
 
         return Column(
@@ -237,7 +237,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: recent.length,
-                  separatorBuilder: (_, __) =>
+                  separatorBuilder: (_, _) =>
                       const Divider(height: 1, color: AppTheme.divider),
                   itemBuilder: (_, i) {
                     final msg = recent[i];
@@ -347,7 +347,7 @@ class _StatCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: data.color.withOpacity(0.12),
+                  color: data.color.withValues(alpha:0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(data.icon, color: data.color, size: 20),

@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 import '../../../core/constants.dart';
 import '../../../core/theme.dart';
 import '../../../models/product.dart';
@@ -18,12 +21,16 @@ class ProductFormScreen extends StatefulWidget {
 class _ProductFormScreenState extends State<ProductFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameCtrl;
-  late final TextEditingController _descCtrl;
   late final TextEditingController _priceCtrl;
   late final TextEditingController _imageCtrl;
   late final TextEditingController _stockCtrl;
-  String _category = AppConstants.productCategories.first;
-  bool _isFeatured = false;
+  late String _category;
+  late bool _isFeatured;
+  
+  late QuillController _quillController;
+  final FocusNode _editorFocusNode = FocusNode();
+  final ScrollController _editorScrollController = ScrollController();
+
   bool _saving = false;
 
   bool get _isEditing => widget.existingProduct != null;
@@ -33,12 +40,31 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     super.initState();
     final p = widget.existingProduct;
     _nameCtrl = TextEditingController(text: p?.name ?? '');
-    _descCtrl = TextEditingController(text: p?.description ?? '');
-    _priceCtrl =
-        TextEditingController(text: p != null ? p.price.toString() : '');
+    
+    // Load description - handle Delta JSON or plain text
+    String descText = p?.description ?? '';
+    Document doc;
+    try {
+      if (descText.startsWith('[') && descText.endsWith(']')) {
+        doc = Document.fromJson(jsonDecode(descText));
+      } else {
+        doc = Document()..insert(0, descText.isEmpty ? '\n' : descText);
+      }
+    } catch (_) {
+      doc = Document()..insert(0, descText.isEmpty ? '\n' : descText);
+    }
+    _quillController = QuillController(
+      document: doc,
+      selection: const TextSelection.collapsed(offset: 0),
+    );
+
+    _priceCtrl = TextEditingController(
+      text: p != null ? p.price.toString() : '',
+    );
     _imageCtrl = TextEditingController(text: p?.imageUrl ?? '');
-    _stockCtrl =
-        TextEditingController(text: p != null ? p.stock.toString() : '');
+    _stockCtrl = TextEditingController(
+      text: p != null ? p.stock.toString() : '',
+    );
     _category = p?.category ?? AppConstants.productCategories.first;
     _isFeatured = p?.isFeatured ?? false;
   }
@@ -46,7 +72,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   @override
   void dispose() {
     _nameCtrl.dispose();
-    _descCtrl.dispose();
+    _quillController.dispose();
+    _editorFocusNode.dispose();
+    _editorScrollController.dispose();
     _priceCtrl.dispose();
     _imageCtrl.dispose();
     _stockCtrl.dispose();
@@ -55,12 +83,13 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
+
     setState(() => _saving = true);
 
     final product = Product(
       id: widget.existingProduct?.id ?? '',
       name: _nameCtrl.text.trim(),
-      description: _descCtrl.text.trim(),
+      description: jsonEncode(_quillController.document.toDelta().toJson()),
       price: double.tryParse(_priceCtrl.text.trim()) ?? 0,
       category: _category,
       imageUrl: _imageCtrl.text.trim(),
@@ -72,7 +101,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     bool success;
 
     if (_isEditing) {
-      success = await provider.updateProduct(widget.existingProduct!.id, product);
+      success = await provider.updateProduct(
+        widget.existingProduct!.id,
+        product,
+      );
     } else {
       success = await provider.createProduct(product);
     }
@@ -145,14 +177,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       validator: (v) => v!.isEmpty ? 'Required' : null,
                     ),
                     const SizedBox(height: 16),
-                    _buildField(
-                      controller: _descCtrl,
-                      label: 'Description *',
-                      hint: 'Describe the product...',
-                      maxLines: 4,
-                      validator: (v) =>
-                          v!.length < 10 ? 'Too short (min 10 chars)' : null,
-                    ),
+                    _buildRichTextField(),
                   ]),
                   const SizedBox(height: 24),
                   _buildSection('Pricing & Inventory', [
@@ -195,7 +220,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   const SizedBox(height: 24),
                   _buildSection('Category & Visibility', [
                     DropdownButtonFormField<String>(
-                      value: _category,
+                      initialValue: _category,
                       items: AppConstants.productCategories
                           .map(
                             (c) => DropdownMenuItem(value: c, child: Text(c)),
@@ -259,8 +284,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                       controller: _imageCtrl,
                       label: 'Image URL *',
                       hint: 'https://...',
-                      validator: (v) =>
-                          v!.isEmpty ? 'Required' : null,
+                      validator: (v) => v!.isEmpty ? 'Required' : null,
                     ),
                     if (_imageCtrl.text.isNotEmpty) ...[
                       const SizedBox(height: 16),
@@ -271,7 +295,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                           height: 180,
                           width: double.infinity,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(
+                          errorBuilder: (_, _, _) => Container(
                             height: 120,
                             color: AppTheme.surfaceVariant,
                             child: const Center(
@@ -354,6 +378,72 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       validator: validator,
       onChanged: (_) => setState(() {}),
       decoration: InputDecoration(labelText: label, hintText: hint),
+    );
+  }
+
+
+  Widget _buildRichTextField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Description *',
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 300,
+          decoration: BoxDecoration(
+            border: Border.all(color: AppTheme.divider),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // ── Quill Toolbar ──────────────────────────────────────────────
+              Container(
+                decoration: BoxDecoration(
+                  color: AppTheme.surfaceVariant,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(11),
+                    topRight: Radius.circular(11),
+                  ),
+                  border: Border(bottom: BorderSide(color: AppTheme.divider)),
+                ),
+                child: QuillSimpleToolbar(
+                  controller: _quillController,
+                  config: const QuillSimpleToolbarConfig(
+                    showFontFamily: false,
+                    showFontSize: false,
+                    showSubscript: false,
+                    showSuperscript: false,
+                    showSearchButton: false,
+                    showInlineCode: false,
+                    showColorButton: false,
+                    showBackgroundColorButton: false,
+                  ),
+                ),
+              ),
+              // ── Quill Editor ────────────────────────────────────────────────
+              Expanded(
+                child: QuillEditor(
+                  focusNode: _editorFocusNode,
+                  scrollController: _editorScrollController,
+                  controller: _quillController,
+                  config: QuillEditorConfig(
+                    placeholder: 'Write a detailed description...',
+                    padding: const EdgeInsets.all(16),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -195,7 +195,7 @@ class _TestimonialFormScreenState extends State<TestimonialFormScreen> {
                       allowHalfRating: true,
                       itemCount: 5,
                       itemSize: 32,
-                      itemBuilder: (_, __) => const Icon(
+                      itemBuilder: (_, _) => const Icon(
                         Icons.star,
                         color: Colors.amber,
                       ),
@@ -244,7 +244,7 @@ class _TestimonialFormScreenState extends State<TestimonialFormScreen> {
                             radius: 30,
                             backgroundImage:
                                 NetworkImage(_avatarCtrl.text),
-                            onBackgroundImageError: (_, __) {},
+                            onBackgroundImageError: (_, _) {},
                             backgroundColor: AppTheme.accentLight,
                           ),
                           const SizedBox(width: 12),

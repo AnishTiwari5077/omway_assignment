@@ -35,7 +35,7 @@ class _ContactsListScreenState extends State<ContactsListScreen> {
           Row(
             children: [
               Consumer<ContactProvider>(
-                builder: (_, p, __) => Row(
+                builder: (_, p, _) => Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -77,7 +77,7 @@ class _ContactsListScreenState extends State<ContactsListScreen> {
               ),
               const Spacer(),
               Consumer<ContactProvider>(
-                builder: (_, p, __) => TextButton.icon(
+                builder: (_, p, _) => TextButton.icon(
                   onPressed: p.isLoading ? null : () => p.loadContacts(),
                   icon: const Icon(Icons.refresh, size: 16),
                   label: const Text('Refresh'),
@@ -90,7 +90,7 @@ class _ContactsListScreenState extends State<ContactsListScreen> {
           // ── List ─────────────────────────────────────────────────────────
           Expanded(
             child: Consumer<ContactProvider>(
-              builder: (_, provider, __) {
+              builder: (_, provider, _) {
                 if (provider.isLoading) {
                   return const Center(
                     child: CircularProgressIndicator(color: AppTheme.primary),
@@ -216,10 +216,10 @@ class _ContactCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isUnread ? AppTheme.accentLight.withOpacity(0.3) : Colors.white,
+        color: isUnread ? AppTheme.accentLight.withValues(alpha: 0.3) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isUnread ? AppTheme.primary.withOpacity(0.2) : AppTheme.divider,
+          color: isUnread ? AppTheme.primary.withValues(alpha: 0.2) : AppTheme.divider,
           width: isUnread ? 1.5 : 1,
         ),
       ),

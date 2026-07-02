@@ -10,6 +10,9 @@ import 'providers/testimonial_provider.dart';
 import 'providers/auth_provider.dart';
 import 'features/admin/login_screen.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+
 void main() {
   runApp(const PharmacyApp());
 }
@@ -38,6 +41,15 @@ class PharmacyApp extends StatelessWidget {
             PointerDeviceKind.trackpad,
           },
         ),
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          FlutterQuillLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', 'US'),
+        ],
         initialRoute: '/',
         routes: {
           '/': (_) => const LandingPage(),

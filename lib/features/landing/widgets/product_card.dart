@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme.dart';
@@ -16,6 +17,67 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   bool _isHovered = false;
 
+  Widget _buildRichDescription(String description) {
+    if (description.isEmpty) return const SizedBox();
+    
+    try {
+      if (description.startsWith('[') && description.endsWith(']')) {
+        final List<dynamic> ops = jsonDecode(description);
+        List<TextSpan> spans = [];
+        for (var op in ops) {
+          if (op is Map<String, dynamic> && op.containsKey('insert')) {
+            final insert = op['insert'];
+            if (insert is String) {
+              // Strip extra newlines for the preview
+              final text = insert.replaceAll(RegExp(r'\n+'), ' ');
+              if (text.trim().isEmpty && text != ' ') continue;
+
+              final attributes = op['attributes'] as Map<String, dynamic>?;
+              final isBold = attributes?['bold'] == true;
+              final isItalic = attributes?['italic'] == true;
+              
+              spans.add(TextSpan(
+                text: text,
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: AppTheme.textSecondary,
+                  height: 1.5,
+                  fontWeight: isBold ? FontWeight.w800 : FontWeight.normal,
+                  fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
+                ),
+              ));
+            }
+          }
+        }
+        return RichText(
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          text: TextSpan(children: spans),
+        );
+      }
+    } catch (_) {}
+
+    // Strip legacy markdown syntax for a clean preview (fallback)
+    final plainText = description
+        .replaceAll(RegExp(r'\*\*(.+?)\*\*'), r'$1') 
+        .replaceAll(RegExp(r'\*(.+?)\*'), r'$1')     
+        .replaceAll(RegExp(r'^#+\s', multiLine: true), '')    
+        .replaceAll(RegExp(r'^-\s', multiLine: true), '')     
+        .replaceAll(RegExp(r'\n+'), ' ')
+        .trim();
+
+    return Text(
+      plainText,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: GoogleFonts.inter(
+        fontSize: 12,
+        color: AppTheme.textSecondary,
+        height: 1.5,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
@@ -23,17 +85,18 @@ class _ProductCardState extends State<ProductCard> {
       onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
         decoration: BoxDecoration(
           color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: _isHovered ? AppTheme.primary.withOpacity(0.3) : AppTheme.divider,
+            color: _isHovered ? AppTheme.primary.withValues(alpha:0.3) : AppTheme.divider,
           ),
           boxShadow: [
             BoxShadow(
               color: _isHovered
-                  ? AppTheme.primary.withOpacity(0.12)
+                  ? AppTheme.primary.withValues(alpha:0.12)
                   : AppTheme.shadow,
               blurRadius: _isHovered ? 32 : 12,
               offset: Offset(0, _isHovered ? 12 : 4),
@@ -140,16 +203,7 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                           const SizedBox(height: 6),
-                          Text(
-                            widget.product.description,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              color: AppTheme.textSecondary,
-                              height: 1.5,
-                            ),
-                          ),
+                        _buildRichDescription(widget.product.description),
                           const SizedBox(height: 14),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -226,7 +280,7 @@ class _ProductCardState extends State<ProductCard> {
             ),
           );
         },
-        errorBuilder: (_, __, ___) => Container(
+        errorBuilder: (_, _, _) => Container(
           color: AppTheme.accentLight,
           child: const Icon(
             Icons.medication_outlined,

@@ -98,7 +98,7 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
+            color: Colors.white.withValues(alpha:0.15),
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(
@@ -128,7 +128,7 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
           textAlign: TextAlign.center,
           style: GoogleFonts.inter(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.75),
+            color: Colors.white.withValues(alpha:0.75),
             height: 1.5,
           ),
         ),
@@ -191,7 +191,7 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
           decoration: BoxDecoration(
             color: i == _currentPage
                 ? Colors.white
-                : Colors.white.withOpacity(0.4),
+                : Colors.white.withValues(alpha:0.4),
             borderRadius: BorderRadius.circular(4),
           ),
         ),
@@ -210,12 +210,12 @@ class _TestimonialCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha:0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.15)),
+        border: Border.all(color: Colors.white.withValues(alpha:0.15)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha:0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -235,7 +235,7 @@ class _TestimonialCard extends StatelessWidget {
           // Rating
           RatingBarIndicator(
             rating: testimonial.rating,
-            itemBuilder: (_, __) => const Icon(
+            itemBuilder: (_, _) => const Icon(
               Icons.star,
               color: Colors.amber,
             ),
@@ -252,7 +252,7 @@ class _TestimonialCard extends StatelessWidget {
               maxLines: 15,
               style: GoogleFonts.inter(
                 fontSize: 14,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha:0.9),
                 height: 1.65,
                 fontStyle: FontStyle.italic,
               ),
@@ -298,7 +298,7 @@ class _TestimonialCard extends StatelessWidget {
                       testimonial.role,
                       style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: Colors.white.withOpacity(0.65),
+                        color: Colors.white.withValues(alpha:0.65),
                       ),
                     ),
                   ],

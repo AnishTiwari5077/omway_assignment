@@ -45,7 +45,7 @@ class _TestimonialsListScreenState extends State<TestimonialsListScreen> {
           // ── Grid ─────────────────────────────────────────────────────────
           Expanded(
             child: Consumer<TestimonialProvider>(
-              builder: (_, provider, __) {
+              builder: (_, provider, _) {
                 if (provider.isLoading) {
                   return const Center(
                     child: CircularProgressIndicator(color: AppTheme.primary),
@@ -154,9 +154,9 @@ class _TestimonialsListScreenState extends State<TestimonialsListScreen> {
       ),
     );
 
-    if (confirmed == true && mounted) {
+    if (confirmed == true && context.mounted) {
       await provider.deleteTestimonial(t.id);
-      if (mounted) {
+      if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Testimonial deleted'),
@@ -245,7 +245,7 @@ class _TestimonialAdminCard extends StatelessWidget {
                       // Rating
                       RatingBarIndicator(
                         rating: testimonial.rating.toDouble(),
-                        itemBuilder: (_, __) => const Icon(
+                        itemBuilder: (_, _) => const Icon(
                           Icons.star,
                           color: Colors.amber,
                         ),

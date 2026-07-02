@@ -70,7 +70,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
         color: _isScrolled
-            ? AppTheme.surface.withOpacity(0.97)
+            ? AppTheme.surface.withValues(alpha: 0.97)
             : Colors.transparent,
         boxShadow: _isScrolled
             ? [

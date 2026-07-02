@@ -99,7 +99,7 @@ class _AdminShellState extends State<AdminShell> {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(
@@ -161,7 +161,7 @@ class _AdminShellState extends State<AdminShell> {
                 style: GoogleFonts.inter(color: Colors.white70, fontSize: 13),
               ),
               style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -183,58 +183,53 @@ class _AdminShellState extends State<AdminShell> {
     final isActive = _selectedIndex == index;
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: isActive ? Colors.white.withOpacity(0.15) : Colors.transparent,
+      child: ListTile(
+        selected: isActive,
+        selectedTileColor: Colors.white.withValues(alpha: 0.15),
+        onTap: () => setState(() => _selectedIndex = index),
+        leading: Icon(
+          isActive ? item.activeIcon : item.icon,
+          color: isActive ? Colors.white : Colors.white60,
+          size: 20,
+        ),
+        title: Text(
+          item.label,
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+            color: isActive ? Colors.white : Colors.white70,
+          ),
+        ),
+        trailing: item.showBadge
+            ? Consumer<ContactProvider>(
+                builder: (_, p, _) {
+                  final count = p.unreadCount;
+                  if (count == 0) return const SizedBox();
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppTheme.error,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Text(
+                      '$count',
+                      style: GoogleFonts.inter(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                },
+              )
+            : null,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        child: ListTile(
-          onTap: () => setState(() => _selectedIndex = index),
-          leading: Icon(
-            isActive ? item.activeIcon : item.icon,
-            color: isActive ? Colors.white : Colors.white60,
-            size: 20,
-          ),
-          title: Text(
-            item.label,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-              color: isActive ? Colors.white : Colors.white70,
-            ),
-          ),
-          trailing: item.showBadge
-              ? Consumer<ContactProvider>(
-                  builder: (_, p, __) {
-                    final count = p.unreadCount;
-                    if (count == 0) return const SizedBox();
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppTheme.error,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        '$count',
-                        style: GoogleFonts.inter(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
-                      ),
-                    );
-                  },
-                )
-              : null,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       ),
     );
   }

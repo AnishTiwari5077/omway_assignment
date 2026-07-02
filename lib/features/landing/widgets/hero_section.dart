@@ -35,7 +35,7 @@ class HeroSection extends StatelessWidget {
               height: 400,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withValues(alpha:0.05),
               ),
             ),
           ),
@@ -47,7 +47,7 @@ class HeroSection extends StatelessWidget {
               height: 280,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.04),
+                color: Colors.white.withValues(alpha:0.04),
               ),
             ),
           ),
@@ -59,7 +59,7 @@ class HeroSection extends StatelessWidget {
               height: 200,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.06),
+                color: Colors.white.withValues(alpha:0.06),
               ),
             ),
           ),
@@ -107,7 +107,7 @@ class HeroSection extends StatelessWidget {
                   Text(
                     'Scroll to explore',
                     style: GoogleFonts.inter(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha:0.6),
                       fontSize: 12,
                     ),
                   ),
@@ -138,9 +138,9 @@ class HeroSection extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.15),
+            color: Colors.white.withValues(alpha:0.15),
             borderRadius: BorderRadius.circular(100),
-            border: Border.all(color: Colors.white.withOpacity(0.3)),
+            border: Border.all(color: Colors.white.withValues(alpha:0.3)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -186,7 +186,7 @@ class HeroSection extends StatelessWidget {
           'Premium quality medicines, supplements, and healthcare products delivered right to your doorstep. Experience healthcare the modern way.',
           style: GoogleFonts.inter(
             fontSize: 17,
-            color: Colors.white.withOpacity(0.85),
+            color: Colors.white.withValues(alpha:0.85),
             height: 1.65,
             fontWeight: FontWeight.w400,
           ),
@@ -287,7 +287,7 @@ class HeroSection extends StatelessWidget {
               s.$2,
               style: GoogleFonts.inter(
                 fontSize: 13,
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha:0.7),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -301,9 +301,9 @@ class HeroSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha:0.1),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: Colors.white.withValues(alpha:0.2)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -350,7 +350,7 @@ class HeroSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha:0.08),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -362,7 +362,7 @@ class HeroSection extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha:0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: color, size: 22),
