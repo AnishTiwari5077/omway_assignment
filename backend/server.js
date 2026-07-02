@@ -1,28 +1,31 @@
+require('dotenv').config();
+// Override system DNS to use Google's public DNS (bypasses ISP DNS blocks)
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
+const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 
+const Product = require('./models/Product');
+const Testimonial = require('./models/Testimonial');
+const Contact = require('./models/Contact');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DB_PATH = path.join(__dirname, 'data', 'db.json');
-const JWT_SECRET = 'super-secret-admin-key-omway';
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-admin-key-omway';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/pharmacy';
 
 // ─── Middleware ────────────────────────────────────────────────────────────────
 app.use(cors());
 app.use(express.json());
 
-// ─── DB Helpers ───────────────────────────────────────────────────────────────
-function readDB() {
-  const raw = fs.readFileSync(DB_PATH, 'utf-8');
-  return JSON.parse(raw);
-}
-
-function writeDB(data) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
-}
+// ─── Database Connection ──────────────────────────────────────────────────────
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('✅ Connected to MongoDB'))
+  .catch((err) => console.error('❌ MongoDB connection error:', err));
 
 // ─── Auth Middleware ──────────────────────────────────────────────────────────
 function authMiddleware(req, res, next) {
@@ -53,192 +56,264 @@ app.post('/api/auth/login', (req, res) => {
 
 // ─── Products Routes ──────────────────────────────────────────────────────────
 // GET all products
-app.get('/api/products', (req, res) => {
-  const db = readDB();
-  res.json({ success: true, data: db.products });
+app.get('/api/products', async (req, res) => {
+  try {
+    const products = await Product.find({}, '-_id -__v');
+    res.json({ success: true, data: products });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // GET featured products
-app.get('/api/products/featured', (req, res) => {
-  const db = readDB();
-  const featured = db.products.filter(p => p.isFeatured);
-  res.json({ success: true, data: featured });
+app.get('/api/products/featured', async (req, res) => {
+  try {
+    const featured = await Product.find({ isFeatured: true }, '-_id -__v');
+    res.json({ success: true, data: featured });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // GET single product
-app.get('/api/products/:id', (req, res) => {
-  const db = readDB();
-  const product = db.products.find(p => p.id === req.params.id);
-  if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
-  res.json({ success: true, data: product });
+app.get('/api/products/:id', async (req, res) => {
+  try {
+    const product = await Product.findOne({ id: req.params.id }, '-_id -__v');
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
+    res.json({ success: true, data: product });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // POST create product (Protected)
-app.post('/api/products', authMiddleware, (req, res) => {
+app.post('/api/products', authMiddleware, async (req, res) => {
   const { name, price, description, category, imageUrl } = req.body;
   if (!name || price === undefined || !description || !category || !imageUrl) {
     return res.status(400).json({ success: false, message: 'Validation error: Missing required fields' });
   }
 
-  const db = readDB();
-  const product = {
-    id: uuidv4(),
-    createdAt: new Date().toISOString(),
-    ...req.body,
-  };
-  db.products.push(product);
-  writeDB(db);
-  res.status(201).json({ success: true, data: product });
+  try {
+    const product = new Product({
+      id: uuidv4(),
+      ...req.body,
+    });
+    await product.save();
+    
+    // Return without mongoose internal fields
+    const productResponse = product.toObject();
+    delete productResponse._id;
+    delete productResponse.__v;
+    
+    res.status(201).json({ success: true, data: productResponse });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // PUT update product (Protected)
-app.put('/api/products/:id', authMiddleware, (req, res) => {
+app.put('/api/products/:id', authMiddleware, async (req, res) => {
   const { name, price, description, category, imageUrl } = req.body;
   if (!name || price === undefined || !description || !category || !imageUrl) {
     return res.status(400).json({ success: false, message: 'Validation error: Missing required fields' });
   }
 
-  const db = readDB();
-  const idx = db.products.findIndex(p => p.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ success: false, message: 'Product not found' });
-  db.products[idx] = { ...db.products[idx], ...req.body };
-  writeDB(db);
-  res.json({ success: true, data: db.products[idx] });
+  try {
+    const product = await Product.findOneAndUpdate(
+      { id: req.params.id },
+      { ...req.body },
+      { new: true, projection: '-_id -__v' }
+    );
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
+    res.json({ success: true, data: product });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // DELETE product (Protected)
-app.delete('/api/products/:id', authMiddleware, (req, res) => {
-  const db = readDB();
-  const idx = db.products.findIndex(p => p.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ success: false, message: 'Product not found' });
-  db.products.splice(idx, 1);
-  writeDB(db);
-  res.json({ success: true, message: 'Product deleted' });
+app.delete('/api/products/:id', authMiddleware, async (req, res) => {
+  try {
+    const product = await Product.findOneAndDelete({ id: req.params.id });
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
+    res.json({ success: true, message: 'Product deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // ─── Testimonials Routes ──────────────────────────────────────────────────────
 // GET all testimonials
-app.get('/api/testimonials', (req, res) => {
-  const db = readDB();
-  res.json({ success: true, data: db.testimonials });
+app.get('/api/testimonials', async (req, res) => {
+  try {
+    const testimonials = await Testimonial.find({}, '-_id -__v');
+    res.json({ success: true, data: testimonials });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // GET single testimonial
-app.get('/api/testimonials/:id', (req, res) => {
-  const db = readDB();
-  const item = db.testimonials.find(t => t.id === req.params.id);
-  if (!item) return res.status(404).json({ success: false, message: 'Testimonial not found' });
-  res.json({ success: true, data: item });
+app.get('/api/testimonials/:id', async (req, res) => {
+  try {
+    const item = await Testimonial.findOne({ id: req.params.id }, '-_id -__v');
+    if (!item) return res.status(404).json({ success: false, message: 'Testimonial not found' });
+    res.json({ success: true, data: item });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // POST create testimonial (Protected)
-app.post('/api/testimonials', authMiddleware, (req, res) => {
+app.post('/api/testimonials', authMiddleware, async (req, res) => {
   const { authorName, role, content, rating } = req.body;
   if (!authorName || !role || !content || rating === undefined) {
     return res.status(400).json({ success: false, message: 'Validation error: Missing required fields' });
   }
 
-  const db = readDB();
-  const testimonial = {
-    id: uuidv4(),
-    createdAt: new Date().toISOString(),
-    ...req.body,
-  };
-  db.testimonials.push(testimonial);
-  writeDB(db);
-  res.status(201).json({ success: true, data: testimonial });
+  try {
+    const testimonial = new Testimonial({
+      id: uuidv4(),
+      ...req.body,
+    });
+    await testimonial.save();
+    
+    const responseData = testimonial.toObject();
+    delete responseData._id;
+    delete responseData.__v;
+    
+    res.status(201).json({ success: true, data: responseData });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // PUT update testimonial (Protected)
-app.put('/api/testimonials/:id', authMiddleware, (req, res) => {
+app.put('/api/testimonials/:id', authMiddleware, async (req, res) => {
   const { authorName, role, content, rating } = req.body;
   if (!authorName || !role || !content || rating === undefined) {
     return res.status(400).json({ success: false, message: 'Validation error: Missing required fields' });
   }
 
-  const db = readDB();
-  const idx = db.testimonials.findIndex(t => t.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ success: false, message: 'Testimonial not found' });
-  db.testimonials[idx] = { ...db.testimonials[idx], ...req.body };
-  writeDB(db);
-  res.json({ success: true, data: db.testimonials[idx] });
+  try {
+    const testimonial = await Testimonial.findOneAndUpdate(
+      { id: req.params.id },
+      { ...req.body },
+      { new: true, projection: '-_id -__v' }
+    );
+    if (!testimonial) return res.status(404).json({ success: false, message: 'Testimonial not found' });
+    res.json({ success: true, data: testimonial });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // DELETE testimonial (Protected)
-app.delete('/api/testimonials/:id', authMiddleware, (req, res) => {
-  const db = readDB();
-  const idx = db.testimonials.findIndex(t => t.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ success: false, message: 'Testimonial not found' });
-  db.testimonials.splice(idx, 1);
-  writeDB(db);
-  res.json({ success: true, message: 'Testimonial deleted' });
+app.delete('/api/testimonials/:id', authMiddleware, async (req, res) => {
+  try {
+    const testimonial = await Testimonial.findOneAndDelete({ id: req.params.id });
+    if (!testimonial) return res.status(404).json({ success: false, message: 'Testimonial not found' });
+    res.json({ success: true, message: 'Testimonial deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // ─── Contacts Routes ──────────────────────────────────────────────────────────
 // GET all contacts (Protected - admin only)
-app.get('/api/contacts', authMiddleware, (req, res) => {
-  const db = readDB();
-  res.json({ success: true, data: db.contacts });
+app.get('/api/contacts', authMiddleware, async (req, res) => {
+  try {
+    const contacts = await Contact.find({}, '-_id -__v');
+    res.json({ success: true, data: contacts });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // POST submit contact form (Public - no auth required)
-app.post('/api/contacts', (req, res) => {
+app.post('/api/contacts', async (req, res) => {
   const { name, email, message } = req.body;
   if (!name || !email || !message) {
     return res.status(400).json({ success: false, message: 'Validation error: Missing required fields' });
   }
 
-  const db = readDB();
-  const contact = {
-    id: uuidv4(),
-    createdAt: new Date().toISOString(),
-    isRead: false,
-    ...req.body,
-  };
-  db.contacts.push(contact);
-  writeDB(db);
-  res.status(201).json({ success: true, data: contact });
+  try {
+    const contact = new Contact({
+      id: uuidv4(),
+      ...req.body,
+    });
+    await contact.save();
+    
+    const responseData = contact.toObject();
+    delete responseData._id;
+    delete responseData.__v;
+    
+    res.status(201).json({ success: true, data: responseData });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // PUT mark contact as read (Protected)
-app.put('/api/contacts/:id/read', authMiddleware, (req, res) => {
-  const db = readDB();
-  const idx = db.contacts.findIndex(c => c.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ success: false, message: 'Contact not found' });
-  db.contacts[idx].isRead = true;
-  writeDB(db);
-  res.json({ success: true, data: db.contacts[idx] });
+app.put('/api/contacts/:id/read', authMiddleware, async (req, res) => {
+  try {
+    const contact = await Contact.findOneAndUpdate(
+      { id: req.params.id },
+      { isRead: true },
+      { new: true, projection: '-_id -__v' }
+    );
+    if (!contact) return res.status(404).json({ success: false, message: 'Contact not found' });
+    res.json({ success: true, data: contact });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // DELETE contact (Protected)
-app.delete('/api/contacts/:id', authMiddleware, (req, res) => {
-  const db = readDB();
-  const idx = db.contacts.findIndex(c => c.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ success: false, message: 'Contact not found' });
-  db.contacts.splice(idx, 1);
-  writeDB(db);
-  res.json({ success: true, message: 'Contact deleted' });
+app.delete('/api/contacts/:id', authMiddleware, async (req, res) => {
+  try {
+    const contact = await Contact.findOneAndDelete({ id: req.params.id });
+    if (!contact) return res.status(404).json({ success: false, message: 'Contact not found' });
+    res.json({ success: true, message: 'Contact deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // ─── Stats Route ──────────────────────────────────────────────────────────────
 // GET stats (Protected)
-app.get('/api/stats', authMiddleware, (req, res) => {
-  const db = readDB();
-  res.json({
-    success: true,
-    data: {
-      totalProducts: db.products.length,
-      featuredProducts: db.products.filter(p => p.isFeatured).length,
-      totalTestimonials: db.testimonials.length,
-      totalContacts: db.contacts.length,
-      unreadContacts: db.contacts.filter(c => !c.isRead).length,
-    },
-  });
+app.get('/api/stats', authMiddleware, async (req, res) => {
+  try {
+    const totalProducts = await Product.countDocuments();
+    const featuredProducts = await Product.countDocuments({ isFeatured: true });
+    const totalTestimonials = await Testimonial.countDocuments();
+    const totalContacts = await Contact.countDocuments();
+    const unreadContacts = await Contact.countDocuments({ isRead: false });
+
+    res.json({
+      success: true,
+      data: {
+        totalProducts,
+        featuredProducts,
+        totalTestimonials,
+        totalContacts,
+        unreadContacts,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 // ─── Health Check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
-  res.json({ success: true, message: 'Pharmacy API running', timestamp: new Date().toISOString() });
+  const dbState = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  res.json({ 
+    success: true, 
+    message: 'Pharmacy API running', 
+    database: dbState,
+    timestamp: new Date().toISOString() 
+  });
 });
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
