@@ -12,7 +12,7 @@ class AppConstants {
   static const String statsEndpoint = '/stats';
 
   // ─── App Info ─────────────────────────────────────────────────────────────────
-  static const String appName = 'MediCare Pharmacy';
+  static const String appName = 'Medical care Pharmacy';
   static const String appTagline = 'Your Trusted Health Partner';
   static const String appDescription =
       'Quality medicines, supplements, and healthcare products delivered to your door.';

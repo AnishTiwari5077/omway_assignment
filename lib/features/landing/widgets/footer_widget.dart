@@ -15,10 +15,7 @@ class FooterWidget extends StatelessWidget {
 
     return Container(
       color: AppTheme.textPrimary,
-      padding: EdgeInsets.symmetric(
-        horizontal: isWide ? 80 : 24,
-        vertical: 60,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: isWide ? 80 : 24, vertical: 60),
       child: Column(
         children: [
           // ── Main Footer Content ────────────────────────────────────────
@@ -28,9 +25,15 @@ class FooterWidget extends StatelessWidget {
                   children: [
                     Expanded(flex: 3, child: _buildBrand()),
                     const SizedBox(width: 40),
-                    Expanded(flex: 2, child: _buildLinks('Quick Links', _quickLinks)),
+                    Expanded(
+                      flex: 2,
+                      child: _buildLinks('Quick Links', _quickLinks),
+                    ),
                     const SizedBox(width: 40),
-                    Expanded(flex: 2, child: _buildLinks('Categories', _categories)),
+                    Expanded(
+                      flex: 2,
+                      child: _buildLinks('Categories', _categories),
+                    ),
                     const SizedBox(width: 40),
                     Expanded(flex: 3, child: _buildNewsletter()),
                   ],
@@ -58,35 +61,43 @@ class FooterWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '© 2024 MediCare Pharmacy. All rights reserved.',
+                      '©2026 Medical care Pharmacy. All rights reserved.',
                       style: GoogleFonts.inter(
                         fontSize: 13,
                         color: Colors.white38,
                       ),
                     ),
                     Row(
-                      children: ['Privacy Policy', 'Terms of Service', 'Cookie Policy']
-                          .map(
-                            (t) => Padding(
-                              padding: const EdgeInsets.only(left: 24),
-                              child: Text(
-                                t,
-                                style: GoogleFonts.inter(
-                                  fontSize: 13,
-                                  color: Colors.white38,
+                      children:
+                          [
+                                'Privacy Policy',
+                                'Terms of Service',
+                                'Cookie Policy',
+                              ]
+                              .map(
+                                (t) => Padding(
+                                  padding: const EdgeInsets.only(left: 24),
+                                  child: Text(
+                                    t,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 13,
+                                      color: Colors.white38,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          )
-                          .toList(),
+                              )
+                              .toList(),
                     ),
                   ],
                 )
               : Column(
                   children: [
                     Text(
-                      '© 2024 MediCare Pharmacy. All rights reserved.',
-                      style: GoogleFonts.inter(fontSize: 13, color: Colors.white38),
+                      '©2026 MediCal care Pharmacy. All rights reserved.',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        color: Colors.white38,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -118,7 +129,7 @@ class FooterWidget extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Text(
-              'MediCare',
+              'MediCal care',
               style: GoogleFonts.inter(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
@@ -212,7 +223,11 @@ class FooterWidget extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           'Subscribe to get health tips, special offers, and new product alerts.',
-          style: GoogleFonts.inter(fontSize: 13, color: Colors.white54, height: 1.5),
+          style: GoogleFonts.inter(
+            fontSize: 13,
+            color: Colors.white54,
+            height: 1.5,
+          ),
         ),
         const SizedBox(height: 16),
         Row(
@@ -241,12 +256,19 @@ class FooterWidget extends StatelessWidget {
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primary,
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 16,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Icon(Icons.arrow_forward, color: Colors.white, size: 18),
+              child: const Icon(
+                Icons.arrow_forward,
+                color: Colors.white,
+                size: 18,
+              ),
             ),
           ],
         ),

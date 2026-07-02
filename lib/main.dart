@@ -30,7 +30,7 @@ class PharmacyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MaterialApp(
-        title: 'MediCare Pharmacy',
+        title: 'MediCal care Pharmacy',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         scrollBehavior: const MaterialScrollBehavior().copyWith(
@@ -47,9 +47,7 @@ class PharmacyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           FlutterQuillLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale('en', 'US'),
-        ],
+        supportedLocales: const [Locale('en', 'US')],
         initialRoute: '/',
         routes: {
           '/': (_) => const LandingPage(),

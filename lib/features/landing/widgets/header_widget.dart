@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme.dart';
 import '../../../core/constants.dart';
 
-
 class HeaderWidget extends StatefulWidget {
   final ScrollController scrollController;
   final Map<String, GlobalKey> sectionKeys;
@@ -67,59 +66,62 @@ class _HeaderWidgetState extends State<HeaderWidget> {
     final isWide = MediaQuery.of(context).size.width > 900;
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      decoration: BoxDecoration(
-        color: _isScrolled
-            ? AppTheme.surface.withValues(alpha: 0.97)
-            : Colors.transparent,
-        boxShadow: _isScrolled
-            ? [
-                BoxShadow(
-                  color: AppTheme.shadow,
-                  blurRadius: 20,
-                  offset: const Offset(0, 4),
-                ),
-              ]
-            : [],
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: isWide ? 32 : 16, vertical: 16),
-          child: Row(
-            children: [
-              // ── Logo ──────────────────────────────────────────────────────
-              Expanded(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: _buildLogo(),
-                ),
-              ),
-              const SizedBox(width: 8),
-
-              // ── Nav Items (desktop) ───────────────────────────────────────
-              if (isWide) ...[
-                Row(
-                  children: _navItems
-                      .map((item) => _buildNavItem(item))
-                      .toList(),
-                ),
-                const SizedBox(width: 24),
-              ],
-
-              // ── Admin CTA ─────────────────────────────────────────────────
-              _buildAdminButton(context, isWide),
-
-              // ── Mobile Menu ───────────────────────────────────────────────
-              if (!isWide) ...[
-                const SizedBox(width: 8),
-                _buildMobileMenu(context),
-              ],
-            ],
+          duration: const Duration(milliseconds: 300),
+          decoration: BoxDecoration(
+            color: _isScrolled
+                ? AppTheme.surface.withValues(alpha: 0.97)
+                : Colors.transparent,
+            boxShadow: _isScrolled
+                ? [
+                    BoxShadow(
+                      color: AppTheme.shadow,
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : [],
           ),
-        ),
-      ),
-    )
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isWide ? 32 : 16,
+                vertical: 16,
+              ),
+              child: Row(
+                children: [
+                  // ── Logo ──────────────────────────────────────────────────────
+                  Expanded(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: _buildLogo(),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+
+                  // ── Nav Items (desktop) ───────────────────────────────────────
+                  if (isWide) ...[
+                    Row(
+                      children: _navItems
+                          .map((item) => _buildNavItem(item))
+                          .toList(),
+                    ),
+                    const SizedBox(width: 24),
+                  ],
+
+                  // ── Admin CTA ─────────────────────────────────────────────────
+                  _buildAdminButton(context, isWide),
+
+                  // ── Mobile Menu ───────────────────────────────────────────────
+                  if (!isWide) ...[
+                    const SizedBox(width: 8),
+                    _buildMobileMenu(context),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        )
         .animate()
         .fadeIn(duration: 600.ms)
         .slideY(begin: -0.3, end: 0, duration: 500.ms, curve: Curves.easeOut);
@@ -136,11 +138,15 @@ class _HeaderWidgetState extends State<HeaderWidget> {
             gradient: AppTheme.heroGradient,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const Icon(Icons.local_pharmacy, color: Colors.white, size: 22),
+          child: const Icon(
+            Icons.local_pharmacy,
+            color: Colors.white,
+            size: 22,
+          ),
         ),
         const SizedBox(width: 10),
         Text(
-          'MediCare',
+          'Medical care',
           style: GoogleFonts.inter(
             fontSize: 22,
             fontWeight: FontWeight.w800,

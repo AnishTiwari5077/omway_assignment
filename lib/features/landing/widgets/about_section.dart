@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme.dart';
 import 'section_label.dart';
 
-
 class AboutSection extends StatelessWidget {
   final GlobalKey sectionKey;
 
@@ -49,21 +48,20 @@ class AboutSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionLabel(label: 'About Us')
-            .animate()
-            .fadeIn(delay: 100.ms)
-            .slideX(begin: -0.2),
+        SectionLabel(
+          label: 'About Us',
+        ).animate().fadeIn(delay: 100.ms).slideX(begin: -0.2),
         const SizedBox(height: 16),
         Text(
           'Delivering Health,\nBuilding Trust',
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                color: AppTheme.textPrimary,
-                height: 1.2,
-              ),
+            color: AppTheme.textPrimary,
+            height: 1.2,
+          ),
         ).animate().fadeIn(delay: 200.ms).slideX(begin: -0.2),
         const SizedBox(height: 20),
         Text(
-          'MediCare Pharmacy has been serving communities for over 15 years with a commitment to quality, affordability, and care. We partner with certified manufacturers to bring you genuine medicines and health supplements.',
+          'Medical care Pharmacy has been serving communities for over 15 years with a commitment to quality, affordability, and care. We partner with certified manufacturers to bring you genuine medicines and health supplements.',
           style: Theme.of(context).textTheme.bodyLarge,
         ).animate().fadeIn(delay: 300.ms),
         const SizedBox(height: 16),
@@ -113,24 +111,52 @@ class AboutSection extends StatelessWidget {
 
   Widget _buildVisual() {
     return Column(
-      children: [
-        Row(
           children: [
-            Expanded(child: _buildStatCard('15+', 'Years of Experience', Icons.timeline, AppTheme.primary)),
-            const SizedBox(width: 16),
-            Expanded(child: _buildStatCard('500+', 'Products Available', Icons.inventory_2_outlined, AppTheme.primaryLight)),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    '15+',
+                    'Years of Experience',
+                    Icons.timeline,
+                    AppTheme.primary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _buildStatCard(
+                    '500+',
+                    'Products Available',
+                    Icons.inventory_2_outlined,
+                    AppTheme.primaryLight,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    '50K+',
+                    'Happy Customers',
+                    Icons.people_outline,
+                    AppTheme.accent,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _buildStatCard(
+                    '24/7',
+                    'Pharmacist Support',
+                    Icons.headset_mic_outlined,
+                    AppTheme.warning,
+                  ),
+                ),
+              ],
+            ),
           ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(child: _buildStatCard('50K+', 'Happy Customers', Icons.people_outline, AppTheme.accent)),
-            const SizedBox(width: 16),
-            Expanded(child: _buildStatCard('24/7', 'Pharmacist Support', Icons.headset_mic_outlined, AppTheme.warning)),
-          ],
-        ),
-      ],
-    )
+        )
         .animate()
         .fadeIn(delay: 300.ms, duration: 700.ms)
         .slideX(begin: 0.2, end: 0);
@@ -191,4 +217,3 @@ class AboutSection extends StatelessWidget {
     );
   }
 }
-

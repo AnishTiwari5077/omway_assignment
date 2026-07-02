@@ -7,7 +7,6 @@ import '../../../models/contact_message.dart';
 import '../../../providers/contact_provider.dart';
 import 'section_label.dart';
 
-
 class ContactSection extends StatefulWidget {
   final GlobalKey sectionKey;
 
@@ -49,8 +48,9 @@ class _ContactSectionState extends State<ContactSection> {
       isRead: false,
     );
 
-    final success =
-        await context.read<ContactProvider>().submitContact(contact);
+    final success = await context.read<ContactProvider>().submitContact(
+      contact,
+    );
 
     setState(() {
       _submitting = false;
@@ -66,9 +66,7 @@ class _ContactSectionState extends State<ContactSection> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text(
-              'Failed to send message. Is the backend running?',
-            ),
+            content: Text('Failed to send message. Is the backend running?'),
             backgroundColor: AppTheme.error,
           ),
         );
@@ -116,17 +114,16 @@ class _ContactSectionState extends State<ContactSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionLabel(label: 'Contact Us')
-            .animate()
-            .fadeIn(delay: 100.ms)
-            .slideX(begin: -0.2),
+        const SectionLabel(
+          label: 'Contact Us',
+        ).animate().fadeIn(delay: 100.ms).slideX(begin: -0.2),
         const SizedBox(height: 16),
         Text(
           "We'd Love\nTo Hear From You",
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                color: AppTheme.textPrimary,
-                height: 1.2,
-              ),
+            color: AppTheme.textPrimary,
+            height: 1.2,
+          ),
         ).animate().fadeIn(delay: 200.ms),
         const SizedBox(height: 16),
         Text(
@@ -135,15 +132,25 @@ class _ContactSectionState extends State<ContactSection> {
         ).animate().fadeIn(delay: 300.ms),
         const SizedBox(height: 36),
         ...[
-          _buildContactItem(Icons.location_on_outlined, 'Address',
-              '123 Health Street, Medical District, Mumbai - 400001'),
-          _buildContactItem(Icons.phone_outlined, 'Phone', '+91 98765 43210'),
           _buildContactItem(
-              Icons.email_outlined, 'Email', 'hello@medicare.in'),
-          _buildContactItem(Icons.access_time_outlined, 'Hours',
-              'Mon–Sat: 8am–10pm\nSun: 10am–6pm'),
-        ]
-            .map((w) => Padding(padding: const EdgeInsets.only(bottom: 16), child: w)),
+            Icons.location_on_outlined,
+            'Address',
+            'kathmandu,Baneshwor,31',
+          ),
+          _buildContactItem(Icons.phone_outlined, 'Phone', '+977 98xxxxxxxxx'),
+          _buildContactItem(
+            Icons.email_outlined,
+            'Email',
+            'hello@medicalcare.in',
+          ),
+          _buildContactItem(
+            Icons.access_time_outlined,
+            'Hours',
+            'Mon–Sat: 8am–10pm\nSun: 10am–6pm',
+          ),
+        ].map(
+          (w) => Padding(padding: const EdgeInsets.only(bottom: 16), child: w),
+        ),
       ],
     );
   }
@@ -230,7 +237,7 @@ class _ContactSectionState extends State<ContactSection> {
             _buildField(
               controller: _nameController,
               label: 'Full Name',
-              hint: 'John Doe',
+              hint: 'Anish',
               icon: Icons.person_outline,
               validator: (v) => v!.isEmpty ? 'Please enter your name' : null,
             ),
@@ -243,9 +250,8 @@ class _ContactSectionState extends State<ContactSection> {
                     label: 'Email',
                     hint: 'you@example.com',
                     icon: Icons.email_outlined,
-                    validator: (v) => v!.contains('@')
-                        ? null
-                        : 'Please enter a valid email',
+                    validator: (v) =>
+                        v!.contains('@') ? null : 'Please enter a valid email',
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -253,7 +259,7 @@ class _ContactSectionState extends State<ContactSection> {
                   child: _buildField(
                     controller: _phoneController,
                     label: 'Phone (optional)',
-                    hint: '+91 98765 43210',
+                    hint: '+977 9xxxxxxxx',
                     icon: Icons.phone_outlined,
                     validator: (_) => null,
                   ),
@@ -267,8 +273,7 @@ class _ContactSectionState extends State<ContactSection> {
               hint: 'How can we help you?',
               icon: Icons.message_outlined,
               maxLines: 5,
-              validator: (v) =>
-                  v!.length < 10 ? 'Message too short' : null,
+              validator: (v) => v!.length < 10 ? 'Message too short' : null,
             ),
             const SizedBox(height: 24),
             SizedBox(

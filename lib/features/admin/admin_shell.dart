@@ -66,9 +66,7 @@ class _AdminShellState extends State<AdminShell> {
             child: Column(
               children: [
                 _buildTopBar(context, isWide),
-                Expanded(
-                  child: _screens[_selectedIndex],
-                ),
+                Expanded(child: _screens[_selectedIndex]),
               ],
             ),
           ),
@@ -82,9 +80,7 @@ class _AdminShellState extends State<AdminShell> {
   Widget _buildSidebar(BuildContext context) {
     return Container(
       width: 260,
-      decoration: const BoxDecoration(
-        gradient: AppTheme.adminGradient,
-      ),
+      decoration: const BoxDecoration(gradient: AppTheme.adminGradient),
       child: Column(
         children: [
           // Logo area
@@ -113,7 +109,7 @@ class _AdminShellState extends State<AdminShell> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'MediCare',
+                          'Medical care',
                           style: GoogleFonts.inter(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
@@ -155,14 +151,21 @@ class _AdminShellState extends State<AdminShell> {
             padding: const EdgeInsets.all(16),
             child: OutlinedButton.icon(
               onPressed: () => Navigator.of(context).pushNamed('/'),
-              icon: const Icon(Icons.arrow_back, size: 16, color: Colors.white70),
+              icon: const Icon(
+                Icons.arrow_back,
+                size: 16,
+                color: Colors.white70,
+              ),
               label: Text(
                 'Back to Site',
                 style: GoogleFonts.inter(color: Colors.white70, fontSize: 13),
               ),
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -226,9 +229,7 @@ class _AdminShellState extends State<AdminShell> {
                 },
               )
             : null,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       ),
     );
@@ -238,15 +239,10 @@ class _AdminShellState extends State<AdminShell> {
     final titles = ['Dashboard', 'Products', 'Testimonials', 'Messages'];
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: isWide ? 20 : 16,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 24, vertical: isWide ? 20 : 16),
       decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(
-          bottom: BorderSide(color: AppTheme.divider),
-        ),
+        border: Border(bottom: BorderSide(color: AppTheme.divider)),
       ),
       child: Row(
         children: [
@@ -314,8 +310,10 @@ class _AdminShellState extends State<AdminShell> {
       type: BottomNavigationBarType.fixed,
       selectedItemColor: AppTheme.primary,
       unselectedItemColor: AppTheme.textMuted,
-      selectedLabelStyle:
-          GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600),
+      selectedLabelStyle: GoogleFonts.inter(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+      ),
       unselectedLabelStyle: GoogleFonts.inter(fontSize: 11),
       items: _navItems
           .map(

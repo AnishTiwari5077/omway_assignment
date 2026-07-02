@@ -1,4 +1,4 @@
-# MediCare Pharmacy 💊
+# Medical care Pharmacy 💊
 
 A full-stack pharmacy store landing page with an admin panel, built as a Flutter Developer assignment.
 
