@@ -20,7 +20,10 @@ app.use(express.json());
 
 // ─── Database Connection (with auto-retry) ───────────────────────────────────
 const connectWithRetry = () => {
-  mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 10000 })
+  mongoose.connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 10000,
+    family: 4, // Force IPv4 — Atlas M0 free tier does not support IPv6
+  })
     .then(() => console.log('✅ Connected to MongoDB'))
     .catch((err) => {
       console.error('❌ MongoDB connection error:', err.message);
