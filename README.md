@@ -23,7 +23,8 @@ assignment_omway/
 └── backend/             ← Node.js/Express REST API
     ├── server.js
     ├── package.json
-    └── data/db.json     ← JSON flat-file database (seeded)
+    ├── models/          ← Mongoose Models (Product, Testimonial, Contact)
+    └── .env             ← Environment variables (MongoDB URI)
 ```
 
 ---
@@ -38,7 +39,7 @@ assignment_omway/
 | Animations | `flutter_animate` |
 | Typography | Google Fonts (Inter) |
 | Backend | Node.js + Express |
-| Database | JSON flat file (fs-based) |
+| Database | MongoDB Atlas (Mongoose) |
 
 ---
 
@@ -56,6 +57,17 @@ assignment_omway/
 ```bash
 cd backend
 npm install
+```
+
+Create a `.env` file in the `backend` folder and add your MongoDB connection string (see `.env.example`):
+```env
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0...
+JWT_SECRET=super-secret-admin-key-omway
+PORT=3000
+```
+
+Start the server:
+```bash
 npm start
 ```
 
