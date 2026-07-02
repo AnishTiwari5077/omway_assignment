@@ -22,10 +22,17 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/pharma
 app.use(cors());
 app.use(express.json());
 
-// ─── Database Connection ──────────────────────────────────────────────────────
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('✅ Connected to MongoDB'))
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+// ─── Database Connection (with auto-retry) ───────────────────────────────────
+const connectWithRetry = () => {
+  mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 10000 })
+    .then(() => console.log('✅ Connected to MongoDB'))
+    .catch((err) => {
+      console.error('❌ MongoDB connection error:', err.message);
+      console.log('🔄 Retrying MongoDB connection in 5 seconds...');
+      setTimeout(connectWithRetry, 5000);
+    });
+};
+connectWithRetry();
 
 // ─── Auth Middleware ──────────────────────────────────────────────────────────
 function authMiddleware(req, res, next) {
