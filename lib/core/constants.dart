@@ -1,7 +1,7 @@
 class AppConstants {
   // ─── API Base URL ─────────────────────────────────────────────────────────────
   // 🌐 Production (Render deployment)
-  static const String baseUrl = 'https://medicare-pharmacy-api.onrender.com/api';
+  static const String baseUrl = 'https://omway-assignment.onrender.com/api';
   // 🏠 Local development (uncomment when running locally)
   // static const String baseUrl = 'http://localhost:3000/api';
 
